@@ -1,8 +1,14 @@
 'use strict'
 
 const STORAGE_KEY = 'bookDB'
+const PAGE_SIZE = 4;
+var gPageIdx = 0;
 var gBooks;
 const gNames = ['Harry Potter', 'Lord Of The Rings', 'Ulysses', 'Don Quixote']
+var gSortBy = {
+    name: {type: 'text', asc: -1},
+    price: {type: 'number', asc:-1}
+}
 
 _createBooks();
 
@@ -34,6 +40,35 @@ function deleteBook(BookId){
     const bookIdx = gBooks.findIndex(book => BookId === book.id)
     gBooks.splice(bookIdx,1)
     _saveBooksToStorage()
+}
+
+function getMaxNumOfPages(){
+    return Math.ceil(gBooks.length / PAGE_SIZE)
+}
+
+function setPage(pageIdx, step){
+    if(pageIdx !== null){
+        gPageIdx = pageIdx
+    }else if(
+        gPageIdx + step >= 0 &&
+        (gPageIdx + step) * PAGE_SIZE < gBooks.length
+    ){
+        gPageIdx += step
+    }
+}
+
+function sortBooks(sortBy){
+    const sort = gSortBy[sortBy]
+    sort.asc = sort.asc * -1
+    if(sort.type === 'text'){
+        gBooks.sort((a,b)=> 
+            a[sortBy].toLowerCase().localeCompare(b[sortBy].toLowerCase()) *
+            sort.asc
+        )
+    }else if(sort.type === 'number'){
+        gBooks.sort((a,b) => ((+a[sortBy]) - (+b[sortBy])) * sort.asc)
+    }
+    return sort.asc
 }
 
 function incrementValue(bookId){

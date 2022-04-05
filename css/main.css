@@ -5,8 +5,9 @@ body {
     padding: 0 40px;
 }
 
-table{
-    border: 1px solid black;
+body .rtl{
+    direction: rtl;
+    float: left;
 }
 
 img{
@@ -24,7 +25,7 @@ img{
     bottom: 10px;
     transition: bottom .5s;
 }
-.modal {
+.my-modal {
     background-color: #111;
     padding: 10px;
     position: absolute;
@@ -34,18 +35,33 @@ img{
     min-width: 300px;
     text-align: center;
 }
-.modal.open {
+.my-modal.open {
     left: 50%;
     transition: left .5s;
 }
-.modal h3{
+.my-modal h3{
     color:pink;
     text-decoration: overline;
     text-transform: capitalize;
 }
-.modal h4 span{
+.my-modal h4 span{
     color:pink;
 }
-.modal > p {
+.my-modal > p {
     text-align: left;
+}
+
+.pages{
+    margin: 0;
+    list-style-type: none;
+    display: flex;
+}
+
+.pages li{
+    width: 30px;
+    padding: 5px;
+    text-align: center;
+    background-color: rgb(56, 127, 103);
+    border: 1px groove aqua;
+    cursor: pointer;
 }

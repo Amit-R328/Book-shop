@@ -1,5 +1,6 @@
 function onInit() {
     renderBooks()
+    renderPages()
 }
 
 function renderBooks() {
@@ -10,16 +11,16 @@ function renderBooks() {
         <td>${book.rate}</td>
         <td><img src="img/${book.name}.jpg" alt="the book ${book.name}"></td>
         <td>${book.price}</td>
-        <td><button onclick="onReadBook('${book.id}')" class="read">Read</button></td>
-        <td><button onclick="onUpdateBook('${book.id}')" class="update">Update</button></td>
-        <td><button onclick="onDeleteBook('${book.id}')" class="delete">Delete</button></td>
+        <td><button onclick="onReadBook('${book.id}')" class="read" data-trans="read">Read</button></td>
+        <td><button onclick="onUpdateBook('${book.id}')" class="update" data-trans="update">Update</button></td>
+        <td><button onclick="onDeleteBook('${book.id}')" class="delete" data-trans="delete">Delete</button></td>
     </tr>`)
     document.querySelector('tbody').innerHTML = strHTML.join('')
 }
 
 function onReadBook(bookId) {
     var book = getBookById(bookId)
-    var elModal = document.querySelector('.modal')
+    var elModal = document.querySelector('.my-modal')
     elModal.querySelector('h3').innerText = book.name
     elModal.querySelector('h4 span').innerText = book.price
     elModal.querySelector('p').innerText = book.desc
@@ -33,7 +34,7 @@ function onReadBook(bookId) {
 
 
 function onCloseModal() {
-    document.querySelector('.modal').classList.remove('open')
+    document.querySelector('.my-modal').classList.remove('open')
     renderBooks()
 }
 
@@ -48,6 +49,32 @@ function onUpdateBook(bookId) {
     }
 }
 
+function onSort(el, sortby){
+    const sortOrder = sortBooks(sortby) === 1
+    el.querySelector('span').innerText = sortOrder ? '⬇' : '⬆'
+    renderBooks()
+}
+
+function renderPages(){
+    const maxPages = getMaxNumOfPages()
+    var strHTML = `<li onclick="onNextPage(-1)">&lt;&lt;</li>`
+    for(var i = 0; i < maxPages; i++){
+        strHTML += `<li onclick="onSelectPage(${i+1})">${i+1}</li>`
+    }
+    strHTML += `<li onclick="onNextPage(1)">&gt;&gt;</li>`
+    document.querySelector('.pages').innerHTML = strHTML
+}
+
+function onSelectPage(idx){
+    setPage(+idx -1)
+    renderBooks()
+}
+
+function onNextPage(step){
+    setPage(null, +step)
+    renderBooks()
+}
+
 function onDeleteBook(BookId) {
     deleteBook(BookId)
     renderBooks()
@@ -55,7 +82,6 @@ function onDeleteBook(BookId) {
 }
 
 function onAddBook(ev) {
-    ev.preventDefault()
     let name = document.querySelector('.name');
     let price = parseFloat(document.querySelector('.price').value);
     
@@ -72,4 +98,14 @@ function flashMsg(msg) {
     setTimeout(() => {
         el.classList.remove('open')
     }, 3000)
+}
+
+function onSetLang(lang){
+    setLang(lang)
+
+    if (lang==='he') document.body.classList.add('rtl')
+    else document.body.classList.remove('rtl')
+
+    doTrans()
+    renderBooks()
 }
