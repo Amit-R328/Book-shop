@@ -13,7 +13,8 @@ var gSortBy = {
 _createBooks();
 
 function getBooks(){
-    var books = gBooks
+    const startIdx = gPageIdx * PAGE_SIZE
+    var books = gBooks.slice(startIdx, startIdx + PAGE_SIZE)
     return books
 }
 
